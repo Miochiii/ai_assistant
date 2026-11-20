@@ -125,6 +125,7 @@ W0/W1 窗口上下文已加入只读模块：外框、DWM 可见外框、客户�
 
 ## 三、许可与合规
 
+0. **本项目自身采用 MIT 许可**（见仓库根目录 `LICENSE`）；下面列出的上游组件各自保留其原始许可，不因本项目为 MIT 而改变；
 1. 上表"复用"组件的**原始 LICENSE / NOTICE 文件随源码保留在原目录**，未做删除或改写；
 2. `third_party/sources/` 与 `third_party/downloads/` 仅作阅读参考，不参与构建，**不随发布物分发**；
 3. 模型权重（`tools/asr/models/`）、ffmpeg 二进制（`third_party/runtimes/`）、`node_modules/`、`.venv/` **均不进入本仓库**，使用前请遵循各自许可；
