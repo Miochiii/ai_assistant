@@ -89,3 +89,43 @@ W0/W1 窗口上下文已加入只读模块：外框、DWM 可见外框、客户�
 结果保存在 `results/desktop/<批次>/`；完整本地事件库在 `runtime/events.sqlite3`。Ctrl+C 可中止前台脚本；任何未完成 run 都不能计为成功，重启不自动重放。历史 UIA 原型没有接入 DSH；当前视觉路线通过原生插件注册工具，没有操作按钮。
 
 桌面依赖安装和候选比较见 [适配记录](docs/desktop_adapter_decision.md)。依赖锁在 `configs/desktop-pywinauto.lock.txt`。临时下载不作为交付；`results/` 是验证证据，`runtime/` 是本地运行数据，均不提交 Git。
+
+---
+
+# 复用与参考的开源项目
+
+本项目不重复造轮子：下面分成两类 —— **复用**（代码在本仓库里真实运行）和 **参考**（只借鉴设计，没有直接运行其代码）。每一行都注明来源、许可，以及**我们改了什么**，便于复核与合规。
+
+## 一、直接复用的组件
+
+| 组件 | 用途 | 版本 / 来源 | 许可 | 我们的改动 |
+|---|---|---|---|---|
+| **DSH（DeepSeek Harness）** | 宿主运行时：插件系统、会话、工具注册、Web GUI、记忆注入 | 桌面版 0.2.1（`E:\dsh`） | 见官方发行说明 | 不改宿主，只写插件 / 工具 / 技能 |
+| **Orb（dsh-orb-cordis）** | 悬浮球与面板、桌面助手外壳、语音、helper 进程；内含 computer-use GUI 工具链 | 上游 0.2.1 → 本仓库 `dsh_orb_full_orig`（Mio 开发版 `0.2.1-mio-dev.31`）<br>https://github.com/mini-yifan/dsh-orb-cordis | MIT | **改动最多的一块**：陪伴模块与状态面板、角色卡与人设桥接、两行浮条、computer-use 增强（UIA 命中信息 / 按名字点击 / 变化判定 / 控件清单与缓存）、多轮 bug 修复（坐标越界、透明窗消失、TDZ 导致 ack 超时等） |
+| **dsh-memory-evolve** | 分层记忆（全局/用户/项目/key/每日）、技能管理、待办、临时便签、提示词库 | `third_party/dsh-memory-evolve` 0.1.0 | MIT | 不改代码；按它的模型写记忆、建技能（`launch-windows-apps`、`office-editing`、`im-send-message`） |
+| **dsh-watch-together** | 视频陪看：按播放进度给分镜 + 字幕 + 语音 | `third_party/dsh-watch-together` 0.3.3（依赖 `dsh-video-storyboard` 0.7.x）<br>https://github.com/SAOS-3624/dsh-watch-together | Apache-2.0（作者 SAOS-3624） | 插件本体不改；接入本地 ASR 替代默认字幕来源 |
+| **dsh-persona-dafeiyu** | 全局人设（角色卡），三档作用域 | 0.8.0（npm 安装）<br>https://github.com/huaizhuanghub/dsh-persona-dafeiyu | MIT | 不改；Orb 的陪伴/指导通过它的 HTTP 桥读取当前人设 |
+| **dsh-see-now** | 陪伴的采样管线 `pipeline.js` 与缩放 `scale.js` | `third_party/sources/dsh-see-now-main` 0.0.7<br>https://github.com/SAOS-3624/dsh-see-now | Apache-2.0 | 直接 import（`plugins/dsh-assistant-host/orb-companion.js`） |
+| **sherpa-onnx** | 本地语音识别推理（纯 CPU，无需 torch） | pip 包 2.0.1 | Apache-2.0 | 只调用其 API |
+| **SenseVoiceSmall（int8）** | ASR 模型权重 | 上游 FunAudioLLM/SenseVoice，经 hf-mirror 下载 | 见上游模型页 | 只加载模型，未改权重 |
+| **ffmpeg** | 视频抽帧 / 转码 | 第三方运行时二进制（`third_party/runtimes`，**不入库**） | 见其发行包（LGPL/GPL 视构建） | 调用命令行 |
+
+## 二、参考过、但没有直接运行其代码的项目
+
+这些源码放在 `third_party/sources/`，只用于读思路、比对接口，不参与构建与运行。
+
+| 项目 | 参考了什么 |
+|---|---|
+| **OmniParser** | "截图 → 可交互元素结构化解析"的整体思路。本项目最终改用 Windows UIA 拿控件，未启用其模型 |
+| **RapidOCR** | 无 UIA 应用（如微信）的 OCR 兜底方案，列入后续计划，尚未接入 |
+| **Windows-MCP** | Windows 桌面自动化的工具接口设计（动作/参数划分） |
+| **mem0 / langmem / LongMemEval / jev-eval** | 记忆系统的分层设计、写入策略与评测方法 |
+| **dsh-vision-toolkit / dsh-game-daily / deepagents / dsh-minecraft-*** | DSH 插件的结构、工具封装与打包方式 |
+| **ClickableTransparentOverlay** | 透明覆盖层（观察框/高亮）的绘制思路；本项目用 Electron 窗口实现 |
+
+## 三、许可与合规
+
+1. 上表"复用"组件的**原始 LICENSE / NOTICE 文件随源码保留在原目录**，未做删除或改写；
+2. `third_party/sources/` 与 `third_party/downloads/` 仅作阅读参考，不参与构建，**不随发布物分发**；
+3. 模型权重（`tools/asr/models/`）、ffmpeg 二进制（`third_party/runtimes/`）、`node_modules/`、`.venv/` **均不进入本仓库**，使用前请遵循各自许可；
+4. 如果本项目的某处实现与上游差异较大（尤其是 `dsh_orb_full_orig` 下的陪伴与 computer-use 部分），以上游仓库的许可条款为准；本仓库只声明"基于其上做了修改"，不额外授权上游代码。
