@@ -1,0 +1,34 @@
+.venv/
+.idea/
+__pycache__/
+*.py[cod]
+runtime/
+results/
+sandbox/
+vendor/
+third_party/downloads/
+third_party/memory_rag_deps/
+third_party/sources/
+third_party/runtimes/
+.env
+.env.*
+!.env.example
+
+# 大文件不进仓库：模型权重、构建产物、临时目录
+tools/asr/models/
+*.onnx
+*.pth
+*.bin
+*.gguf
+dsh_orb_full_orig/node_modules/
+output/
+tmp/
+log/location_test/shots/
+log/location_test/annotated/
+jieba.cache
+*.log
+
+# 杂物：历史误操作产生的目录、编辑器缓存、torch 编译缓存、空的 Orb 工作目录
+--exclude-capture/
+torchinductor_Mio/
+dsh_orb_work/

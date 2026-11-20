@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "suite_version": "0.1.0",
+  "status": "development_contract_not_reliability_benchmark",
+  "scope": {"user_triggered": true, "applications": ["Calculator", "Notepad"], "write_root": "sandbox", "paid_api_authorized": false},
+  "failure_codes": {
+    "OBSERVATION_FAILED": "无法取得指定窗口的结构化观测",
+    "RECOGNITION_WRONG": "观测与实际控件或文本不符",
+    "TARGET_AMBIGUOUS": "目标窗口或元素不唯一",
+    "SELECTION_WRONG": "识别信息正确但选错元素",
+    "STALE_OBSERVATION": "窗口、焦点或界面变化使快照失效",
+    "ACTION_FAILED": "动作调用未完成或被应用拒绝",
+    "VERIFICATION_FAILED": "外部状态明确不符合目标",
+    "VERIFICATION_UNAVAILABLE": "无法可靠读取结果，业务结果为 unknown",
+    "ANSWER_WRONG": "最终回答与已验证结果或证据矛盾",
+    "MEMORY_WRONG": "错误作用域、过期或被删除的记忆被使用",
+    "EVIDENCE_MISSING": "缺少本次判断所需证据",
+    "TIMEOUT": "达到预设截止时间，业务结果为 unknown",
+    "INTERRUPTED": "用户中止或进程恢复时发现未完成事件"
+  },
+  "product_families": [
+    {"id": "desktop", "phase": "current", "goal": "指定窗口内完成可外部验证的桌面任务", "cases": ["desktop.read.calculator", "desktop.read.notepad", "desktop.calculate", "desktop.save"]},
+    {"id": "memory", "phase": "C", "initial_state": "独立空库、虚构用户、两个独立 session", "goal": "记住目录 A，下一会话使用 A；修订到 B 后使用 B；查询历史并删除", "verification": "独立期望事件链检查数据库状态、来源、有效期和检索结果；删除后重启及重建索引不召回内容", "api": "未授权，先规则后端"},
+    {"id": "rag", "phase": "E", "initial_state": "已有 RAG 独立环境；先使用冻结合成回答与证据", "goal": "回答与本次证据绑定，分别展示事实依据、问题覆盖和不可评价原因", "verification": "核对 answer_id、evidence_id、文本版本、已知支持/矛盾/缺证标签；捕获不到最终聊天文本时只评价后端 ask", "api": "本文件不授权问答或语义评价"}
+  ],
+  "desktop_cases": [
+    {
+      "id": "desktop.read.calculator", "mode": "read_only", "split": "development", "template_family": "calculator_read",
+      "initial_state": "用户打开计算器标准模式，在无敏感内容的窗口显示 0，并提供或确认唯一窗口句柄",
+      "goal": "识别指定窗口、数字按钮、运算按钮和结果控件",
+      "allowed_actions": [],
+      "verification": "窗口句柄/PID 对应目标应用；用户核对结果值 0 和可见控件；仅调用读取接口，不切焦点、不点击、不输入",
+      "required_evidence": ["bounded_uia_snapshot", "window_identity", "human_check"],
+      "timeout_seconds": 15, "max_nodes": 200, "max_depth": 8, "max_text_chars": 6000
+    },
+    {
+      "id": "desktop.read.notepad", "mode": "read_only", "split": "development", "template_family": "notepad_read",
+      "initial_state": "用户打开新建记事本，输入虚构文本 Assistant read-only sample 2026 并确认唯一目标窗口；保留未保存状态",
+      "goal": "识别编辑区域、窗口身份并读取测试文本",
+      "allowed_actions": [],
+      "verification": "编辑区域文本与用户提供的字符串相符；用户确认读取前后文本未变；不可读取时报告 unknown",
+      "required_evidence": ["bounded_uia_snapshot", "window_identity", "human_check"],
+      "timeout_seconds": 15, "max_nodes": 200, "max_depth": 8, "max_text_chars": 6000
+    },
+    {
+      "id": "desktop.calculate", "mode": "action_later", "split": "development", "template_family": "calculator_multiply",
+      "initial_state": "已通过只读验证；用户指定计算器标准模式，当前值 0",
+      "goal": "通过控件执行 12×34，结果为 408",
+      "allowed_actions": ["click_selected_control"],
+      "verification": "动作后新快照中指定结果控件的数值为 408；不得仅凭调用无异常或截图变化判成功",
+      "required_evidence": ["before_snapshot", "action_events", "after_snapshot", "result_control_value"],
+      "timeout_seconds": 60, "max_actions": 8
+    },
+    {
+      "id": "desktop.save", "mode": "action_later", "split": "development", "template_family": "notepad_save_new_file",
+      "initial_state": "已通过只读验证；用户指定空白新建记事本；sandbox/<run_id>/note.txt 不存在",
+      "goal": "输入 Assistant test 2026 和一行中文测试文字，另存到 sandbox/<run_id>/note.txt",
+      "allowed_actions": ["click_selected_control", "type_test_text", "save_as_under_sandbox"],
+      "verification": "独立文件读取确认路径在 sandbox 内且内容符合预定义编码/换行规则；保存对话框关闭或标题变化单独不能证明成功",
+      "required_evidence": ["action_events", "resolved_path", "file_sha256", "decoded_content_check"],
+      "timeout_seconds": 120, "max_actions": 20,
+      "expected_text": "Assistant test 2026\n中文测试文字\n", "text_comparison": "只允许 CRLF 与 LF 等价，保留末尾换行及其他字符"
+    }
+  ]
+}

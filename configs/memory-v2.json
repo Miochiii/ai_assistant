@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "allowed_workspace": "E:\\file\\agent\\ai assistant",
+  "python": "E:\\file\\agent\\python.v\\.venv\\Scripts\\python.exe",
+  "embedding_path": "E:\\file\\agent\\python.v\\project\\data\\models\\models\\AI-ModelScope--bge-base-zh-v1.5\\snapshots\\master",
+  "reranker_path": "E:\\file\\agent\\python.v\\project\\data\\models\\models\\AI-ModelScope--bge-reranker-v2-m3\\snapshots\\master",
+  "device": "cpu",
+  "policy": "daily-explicit-preferences-v1",
+  "retention_policy": "manual_until_retention_worker"
+}

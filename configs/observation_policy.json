@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "observation_policy_mode": "off",
+  "block_size": 32,
+  "max_regions": 10,
+  "bounded_wait_enabled": false,
+  "settle_interval_ms": 150,
+  "settle_timeout_ms": 2000,
+  "required_consecutive_frames": 3,
+  "verified_replay_bridge_enabled": false,
+  "notes": "off keeps the existing capture/action path. shadow records local change suggestions without changing input. on requires a separate reviewed enablement."
+}

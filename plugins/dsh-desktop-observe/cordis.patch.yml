@@ -1,0 +1,5 @@
+- insert:
+    - id: desktop-observe-readonly
+      name: dsh-desktop-observe
+    - id: memory-host
+      name: dsh-desktop-observe/memory

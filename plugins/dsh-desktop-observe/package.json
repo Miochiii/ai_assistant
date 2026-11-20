@@ -1,0 +1,17 @@
+{
+  "name": "dsh-desktop-observe",
+  "version": "0.6.5",
+  "private": true,
+  "type": "module",
+  "description": "Read-only desktop capture, guarded click, foreground activation and memory host bridge for the assistant project",
+  "main": "index.js",
+  "exports": { ".": "./index.js", "./memory": "./memory.js", "./client": "./client.js", "./package.json": "./package.json" },
+  "files": ["index.js", "client.js", "bridge.js", "image-delivery.js", "authorization.js", "action.js", "runs.js", "replay.js", "host-check.js", "session-trial.js", "request-limit.js", "memory.js", "memory-client.js", "memory-rag-client.js", "memory-runtime.js", "cordis.patch.yml"],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "inject": ["@deepseek-ai/dsh-client-ui-commands", "@deepseek-ai/dsh-client-ui-conversation", "@deepseek-ai/dsh-client-ui-session"],
+      "platform": "web"
+    }
+  }
+}

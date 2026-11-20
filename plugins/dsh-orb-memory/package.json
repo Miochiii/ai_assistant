@@ -1,0 +1,8 @@
+{
+  "name": "dsh-orb-memory",
+  "version": "0.3.0-dev",
+  "private": true,
+  "type": "module",
+  "description": "Orb memory capture, daily consolidation, natural recall and task context",
+  "exports": { "./bridge": "./bridge.js", "./clean-session": "./clean-session.js", "./generation-host": "./generation-host.js", "./host": "./host.js" }
+}

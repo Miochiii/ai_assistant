@@ -1,0 +1,3 @@
+- insert:
+    - id: assistant-host
+      name: dsh-assistant-host

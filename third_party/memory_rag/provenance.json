@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-11-08",
+  "files": [
+    {
+      "source": "E:\\file\\agent\\python.v\\project\\rag_core\\retriever.py",
+      "copy": "E:\\file\\agent\\ai assistant\\third_party\\memory_rag\\retriever.py",
+      "source_sha256": "5a9bed558497112c1918e314e30bd90671547bce7e7f8f200f80c193f66a409d",
+      "copy_sha256": "0872f1b2fdf1cf336b3d2ef400f2fca0d779905cbdc078e50c7daf8332362924"
+    },
+    {
+      "source": "E:\\file\\agent\\python.v\\project\\change_detection\\conditional_cusum.py",
+      "copy": "E:\\file\\agent\\ai assistant\\third_party\\memory_rag\\conditional_cusum.reference.py",
+      "source_sha256": "1c8de286ae4a47380543e6d195103159175f66279b19f8e742ea542af3f602ba",
+      "copy_sha256": "1c8de286ae4a47380543e6d195103159175f66279b19f8e742ea542af3f602ba"
+    },
+    {
+      "source": "E:\\file\\agent\\python.v\\project\\LICENSE",
+      "copy": "E:\\file\\agent\\ai assistant\\third_party\\memory_rag\\LICENSE",
+      "source_sha256": "d0f6f996bba4c7745cc06d5e2f3b4494d7a824745258a51e4e0b1937f6bea4b1",
+      "copy_sha256": "d0f6f996bba4c7745cc06d5e2f3b4494d7a824745258a51e4e0b1937f6bea4b1"
+    }
+  ],
+  "adapted_at": "2026-11-09"
+}

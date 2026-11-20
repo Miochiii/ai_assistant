@@ -1,0 +1,21 @@
+{
+  "_comment": "拷到 C:\\Users\\Mio\\.dsh\\asr.json 即生效。本机 loopback 地址不需要 key；改完按 mtime 热生效，不用重启 DSH。manage.start 只在端点不通时才拉起服务。language 要与服务启动参数一致：中文视频用 zh（auto 会把短促音效判成日语/韩语碎片）。",
+  "baseUrl": "http://127.0.0.1:8100/v1",
+  "model": "sensevoice-small-int8",
+  "language": "zh",
+  "manage": {
+    "start": [
+      "E:/file/agent/ai assistant/.venv/Scripts/python.exe",
+      "E:/file/agent/ai assistant/tools/asr/sensevoice_server.py",
+      "--port",
+      "8100",
+      "--threads",
+      "6",
+      "--language",
+      "zh"
+    ],
+    "waitMs": 120000,
+    "idleMs": 60000,
+    "healthPath": "/health"
+  }
+}

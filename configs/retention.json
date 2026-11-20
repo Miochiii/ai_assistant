@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "ordinary_vision_ttl_hours": 24,
+  "rgb_ttl_hours": 1,
+  "program_basis": "keep",
+  "templates": "keep",
+  "memory_images": false,
+  "harness_attachments": {
+    "enabled": true,
+    "ttl_hours": 24,
+    "index": "runtime/attachments.jsonl"
+  }
+}

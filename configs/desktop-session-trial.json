@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "trial_id": "readonly-5cfb841d-5b05-4605-a959-1ab9aa809925",
+  "status": "completed",
+  "approved": true,
+  "max_requests": 3,
+  "max_output_tokens": 1024,
+  "authorization_mode": "small_readonly_validation",
+  "authorization_note": "用户已授权小规模验证及定位、单次低风险点击、截图验证。本模型会话仅定位新截图；单次文件菜单点击由本地执行器另外校验。",
+  "expires_at": "2026-10-25T01:27:35.9559523Z",
+  "parent_session_id": "session-de84a1ba-d841-40e6-9535-22cfb9d6c1aa",
+  "observation_path": "E:\\file\\agent\\ai assistant\\results\\vision\\3956b5c1-1dc5-4f6e-90d5-edb2f27813b4\\observation.json",
+  "source_sha256": "ff6a39eb5be42cb0649f299c92c05acd3fd37e2f474ffa22fcb61ec27e367e0f",
+  "image_reviewed": true,
+  "scope": "one-reviewed-image-readonly",
+  "requests_used": 2
+}
