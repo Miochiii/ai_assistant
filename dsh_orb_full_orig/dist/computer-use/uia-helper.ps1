@@ -138,7 +138,9 @@ while ($true) {
           $info = Get-ElementInfo $el -Light
           if ($null -eq $info) { continue }
           $t = $info.type
-          if ($t -ne 'Button' -and $t -ne 'SplitButton' -and $t -ne 'MenuItem' -and $t -ne 'Edit' -and $t -ne 'ListItem') { continue }
+          # Keep any named element with a usable rectangle: WinForms reports a real
+          # button as ControlType.Pane, and a type whitelist would hide it.
+          if (-not $info.rect -or $info.rect.Count -lt 4) { continue }
           if ([string]::IsNullOrWhiteSpace($info.name)) { continue }
           $named++
           if ($filter.Length -gt 0 -and $info.name -notlike "*$filter*") { continue }

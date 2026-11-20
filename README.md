@@ -92,6 +92,46 @@ W0/W1 窗口上下文已加入只读模块：外框、DWM 可见外框、客户�
 
 ---
 
+---
+
+## 冒烟检查（改完代码先跑这个）
+
+```powershell
+node scripts/smoke.mjs                  # 自动挑一个正在运行的应用
+node scripts/smoke.mjs --process EXCEL  # 指定应用
+```
+
+它检查两类**单测抓不到、只有真跑才会炸**的问题：
+
+| 层 | 检查内容 |
+|---|---|
+| 静态 | `uia-helper.ps1` 必须纯 ASCII（Windows PowerShell 5.1 读无 BOM 的 UTF-8 会解析失败） |
+| 静态 | 工具 schema 里不许出现 `required: false`（会让**整个插件加载失败**，会话列表跟着变空） |
+| 运行时 | 真的启动 UIA helper、真的遍历窗口、真的按名字找控件并拿到矩形 |
+| 运行时 | 名字表缓存命中（第二次应 0ms 级）、应用能力表有记录 |
+
+输出示例：
+
+```
+[静态检查]
+  ✓ UIA helper 是纯 ASCII — 7733 字符
+  ✓ 工具 schema 里没有 required: false — 3 个文件
+
+[运行时检查] 目标：DeepSeek Harness (#67276)
+  ✓ UIA helper 能启动并列出控件 — named=513 walk=1041ms 总耗时=1547ms
+  ✓ 名字表缓存生效 — 1547ms → 0ms
+  ✓ 按名字能精确找到控件并拿到矩形 — Pane · 阅读ASR与陪伴控制手册
+  ✓ 应用能力表有记录 — tier A · named 513
+
+结果：6/6 通过
+```
+
+**不覆盖**：真实鼠标点击、DSH 的渲染管线、模型请求。这三块目前靠真实任务人工验证（例如让 Orb 执行一次"打开记事本并关闭"）。
+
+辅助脚本 `scripts/find-control.mjs`：按进程名或 `--hwnd` 找一个控件，打印它的类型与矩形，排查坐标问题时可单独用。
+
+---
+
 # 复用与参考的开源项目
 
 本项目不重复造轮子：下面分成两类 —— **复用**（代码在本仓库里真实运行）和 **参考**（只借鉴设计，没有直接运行其代码）。每一行都注明来源、许可，以及**我们改了什么**，便于复核与合规。
@@ -101,7 +141,7 @@ W0/W1 窗口上下文已加入只读模块：外框、DWM 可见外框、客户�
 | 组件 | 用途 | 版本 / 来源 | 许可 | 我们的改动 |
 |---|---|---|---|---|
 | **DSH（DeepSeek Harness）** | 宿主运行时：插件系统、会话、工具注册、Web GUI、记忆注入 | 桌面版 0.2.1（`E:\dsh`） | 见官方发行说明 | 不改宿主，只写插件 / 工具 / 技能 |
-| **Orb（dsh-orb-cordis）** | 悬浮球与面板、桌面助手外壳、语音、helper 进程；内含 computer-use GUI 工具链 | 上游 0.2.1 → 本仓库 `dsh_orb_full_orig`（Mio 开发版 `0.2.1-mio-dev.31`）<br>https://github.com/mini-yifan/dsh-orb-cordis | MIT | **改动最多的一块**：陪伴模块与状态面板、角色卡与人设桥接、两行浮条、computer-use 增强（UIA 命中信息 / 按名字点击 / 变化判定 / 控件清单与缓存）、多轮 bug 修复（坐标越界、透明窗消失、TDZ 导致 ack 超时等） |
+| **Orb（dsh-orb-cordis）** | 悬浮球与面板、桌面助手外壳、语音、helper 进程；内含 computer-use GUI 工具链 | 上游 0.2.1 → 本仓库 `dsh_orb_full_orig`（Mio 开发版 `0.2.1-mio-dev.32`）<br>https://github.com/mini-yifan/dsh-orb-cordis | MIT | **改动最多的一块**：陪伴模块与状态面板、角色卡与人设桥接、两行浮条、computer-use 增强（UIA 命中信息 / 按名字点击 / 变化判定 / 控件清单与缓存）、多轮 bug 修复（坐标越界、透明窗消失、TDZ 导致 ack 超时等） |
 | **dsh-memory-evolve** | 分层记忆（全局/用户/项目/key/每日）、技能管理、待办、临时便签、提示词库 | `third_party/dsh-memory-evolve` 0.1.0 | MIT | 不改代码；按它的模型写记忆、建技能（`launch-windows-apps`、`office-editing`、`im-send-message`） |
 | **dsh-watch-together** | 视频陪看：按播放进度给分镜 + 字幕 + 语音 | `third_party/dsh-watch-together` 0.3.3（依赖 `dsh-video-storyboard` 0.7.x）<br>https://github.com/SAOS-3624/dsh-watch-together | Apache-2.0（作者 SAOS-3624） | 插件本体不改；接入本地 ASR 替代默认字幕来源 |
 | **dsh-persona-dafeiyu** | 全局人设（角色卡），三档作用域 | 0.8.0（npm 安装）<br>https://github.com/huaizhuanghub/dsh-persona-dafeiyu | MIT | 不改；Orb 的陪伴/指导通过它的 HTTP 桥读取当前人设 |

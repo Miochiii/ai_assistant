@@ -1,6 +1,6 @@
 {
   "name": "dsh-orb-mio-dev",
-  "version": "0.2.1-mio-dev.31",
+  "version": "0.2.1-mio-dev.32",
   "label": "Orb 开发版 · Mio",
   "base": "dsh-orb@0.2.1",
   "source_manifest": {
@@ -28,7 +28,7 @@
   "memory_live_capture": true,
   "memory_daily_scheduler": true,
   "memory_natural_qa": true,
-  "updated_at": "2026-11-19T12:05:00.0000000Z",
+  "updated_at": "2026-11-20T14:40:00.0000000Z",
   "memory_task_context": true,
   "memory_task_cutover": true,
   "task_extension_sha256": {
@@ -66,12 +66,12 @@
   "companion_ticker_notes": "浮条挂在悬浮球下方、右对齐到可见球体右边；360×92、正文两行、每句至少 5 秒。修：每 2 秒的 tick 状态更新会写同一个 json，之前不带 line 就把\"最近一句\"覆盖没了（实测浮条只剩状态行）——现在 OrbCompanion 记 lastSpokenLine，每次状态更新都带上。",
   "companion_tone_notes": "陪伴改成\"主动 + 短句 + 情绪价值\"：COMPANION_SYSTEM 重写为主动反应/一句 30 字/情绪优先/同话题只跟一句，并给了新的 JSON 示例；每次请求的画面说明也改成\"像旁边的朋友那样反应一句\"。陪伴每句上限默认 60→30（角色卡与界面默认值同步），maxTokens 256→192。主动性写在宿主的行为契约里，角色卡只管\"谁在说\"、不管\"说多长/说多主动\"。 【.31】陪伴请求的 maxTokens 下限从 256 降到 64 —— 30 字回复只值约 70 token，之前传 192 会抛 Invalid companion output limit，整条陪伴链路失败。",
   "computer_use": {
-    "index_sha256": "568dd5f1abf82ea991d40aa7713d8486299332906c9ab7da5fc9cba61484dfbf",
+    "index_sha256": "eee591154afecd156d037e19d81c20df85189ec8fc325d69cf1da3bb6d48305f",
     "lasso_sha256": "dda276e0a60353cad82964a361232220bf31900a9a4008d8f729df99f8bd29df",
     "windows_native_sha256": "69ccb1e07723fc2a455788ee7889a626b4fd26d2f69c7d5e5773ec0ed9961ea9",
-    "uia_bridge_sha256": "b2e4236a43c164432590a018ab5b2149eb2ceaf7484640409cb651f3ddf1107b",
-    "uia_helper_sha256": "c7a1fec3fbadd5a0af7ddb4f73af168adeb60e78e7940a7f88e80ff242e4190e",
-    "notes": "click: UIA 命中 + name 参数（三级匹配：精确→去 (快捷键) 后缀→子串）+ changed 差分；list_controls 列名字（含 center 坐标，便于探一次后按坐标点）；名字表缓存 10 分钟、能力表持久化；失败不现场遍历（避免关掉瞬态菜单）；helper 改为纯 ASCII（PS 5.1 读无 BOM 的 UTF-8 会乱码）、过滤最小化窗口的天文负坐标。"
+    "uia_bridge_sha256": "40c9c91c0f5d5d0a4d19c4a210c62ca39760d2e9af0171a05b977bc4df47fe15",
+    "uia_helper_sha256": "0b12288d66f2155386900241a789ffa76eee4676ec465b7f56bb1fee1b0ca092",
+    "notes": "click: UIA 命中 + name（三级匹配）+ changed；list_controls 列名字（含 center），名字表缓存 10 分钟；能力表持久化；失败不现场遍历；helper 纯 ASCII；最小化窗口负坐标过滤；【.32】列表不再按控件类型白名单过滤（WinForms 的按钮是 Pane），helper 冷启动超时放宽到 15s。"
   },
   "companion_stream_sha256": "d0bf8f14bfb09edac71cf5eaeaeb14ff978d2038e5949d9c0fb19d534b3b319e"
 }

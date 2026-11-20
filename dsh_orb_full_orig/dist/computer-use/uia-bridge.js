@@ -17,12 +17,12 @@ import {fileURLToPath} from 'node:url';
 const HELPER = fileURLToPath(new URL('./uia-helper.ps1', import.meta.url));
 const POWERSHELL = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe';
 const DEFAULT_TIMEOUT_MS = 1500;
-const WALK_TIMEOUT_MS = 4000;
+const WALK_TIMEOUT_MS = 15000;
 // 名字表按「应用 + 窗口句柄」缓存 10 分钟：UIA 树会随布局/弹窗变化，不能永久缓存；
 // 但同一个窗口十分钟内反复列清单没意义。
 const CONTROLS_TTL_MS = 10 * 60 * 1000;
 const controlsCache = new Map();
-const START_TIMEOUT_MS = 4000;
+const START_TIMEOUT_MS = 15000;
 
 let child = null;
 let ready = false;

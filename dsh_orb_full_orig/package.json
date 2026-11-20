@@ -1,6 +1,6 @@
 {
   "name": "dsh-orb-mio-dev",
-  "version": "0.2.1-mio-dev.31",
+  "version": "0.2.1-mio-dev.32",
   "type": "module",
   "description": "Orb 开发版 · Mio — Memory Evolve 与 See Now 桌面陪伴接入",
   "keywords": [
